@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import it.riccardoforzan.mongobloom.collection.Person;
 import it.riccardoforzan.mongobloom.service.PersonService;
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,7 +25,7 @@ public class PersonController {
     }
 
     @GetMapping(path = "/find/byFirstName")
-    public List<Person> getByFirstName(@Parameter(description = "First name to match") @RequestParam String firstName) {
+    public List<Person> findByFirstName(@Parameter(description = "First name to match") @RequestParam String firstName) {
         return personService.findByFirstName(firstName);
     }
 
@@ -46,6 +47,21 @@ public class PersonController {
                                                                  @RequestParam(defaultValue = "10") Integer size) {
         Pageable pageable = PageRequest.of(page, size);
         return personService.findByNameOrLastNameContainingIgnoreCase(searchString, pageable);
+    }
+
+    @GetMapping(path = "/find/bySkillAndCity")
+    public Page<Person> findBySkillAndAddress(@RequestParam String skill,
+                                              @RequestParam String city,
+                                              @RequestParam(defaultValue = "0") Integer page,
+                                              @RequestParam(defaultValue = "10") Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return personService.findBySkillAndCity(skill, city, pageable);
+    }
+
+    @GetMapping(path = "/stats/countBySkill")
+    public Page<Document> getCountBySkill(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return personService.getCountBySkill(pageable);
     }
 
     @PostMapping

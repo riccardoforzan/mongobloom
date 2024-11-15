@@ -1,6 +1,7 @@
 package it.riccardoforzan.mongobloom.service;
 
 import it.riccardoforzan.mongobloom.collection.Person;
+import org.bson.Document;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,5 +17,9 @@ public interface PersonService {
     List<Person> findByLastNameAndFirstName(String lastName, String firstName);
 
     Page<Person> findByNameOrLastNameContainingIgnoreCase(String searchString, Pageable pageable);
+
+    Page<Person> findBySkillAndCity(String skill, String city, Pageable pageable);
+
+    Page<Document> getCountBySkill(Pageable pageable);
 
 }

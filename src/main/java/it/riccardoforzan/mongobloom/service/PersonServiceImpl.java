@@ -2,6 +2,7 @@ package it.riccardoforzan.mongobloom.service;
 
 import it.riccardoforzan.mongobloom.collection.Person;
 import it.riccardoforzan.mongobloom.repository.PersonRepository;
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,4 +44,15 @@ public class PersonServiceImpl implements PersonService {
     public Page<Person> findByNameOrLastNameContainingIgnoreCase(String searchString, Pageable pageable) {
         return personRepository.findByNameOrLastNameContainingIgnoreCase(searchString, pageable);
     }
+
+    @Override
+    public Page<Person> findBySkillAndCity(String skill, String city, Pageable pageable) {
+        return personRepository.findBySkillAndCity(skill, city, pageable);
+    }
+
+    @Override
+    public Page<Document> getCountBySkill(Pageable pageable) {
+        return personRepository.getCountBySkill(pageable);
+    }
+
 }
