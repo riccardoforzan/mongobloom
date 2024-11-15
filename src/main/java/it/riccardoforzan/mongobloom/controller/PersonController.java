@@ -5,6 +5,9 @@ import io.swagger.v3.oas.annotations.Parameter;
 import it.riccardoforzan.mongobloom.collection.Person;
 import it.riccardoforzan.mongobloom.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,14 +35,17 @@ public class PersonController {
 
     @GetMapping(path = "/find/byLastNameAndFirstName")
     public List<Person> getByLastNameAndFirstName(@Parameter(description = "Last name to match") @RequestParam String lastName,
-                                                   @Parameter(description = "First name to match") @RequestParam String firstName
+                                                  @Parameter(description = "First name to match") @RequestParam String firstName
     ) {
         return personService.findByLastNameAndFirstName(lastName, firstName);
     }
 
     @GetMapping(path = "/find/byPartialMatch")
-    public List<Person> findByNameOrLastNameContainingIgnoreCase(@Parameter(description = "Case insensitive string") @RequestParam String searchString) {
-        return personService.findByNameOrLastNameContainingIgnoreCase(searchString);
+    public Page<Person> findByNameOrLastNameContainingIgnoreCase(@Parameter(description = "Case insensitive string") @RequestParam String searchString,
+                                                                 @RequestParam(defaultValue = "0") Integer page,
+                                                                 @RequestParam(defaultValue = "10") Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return personService.findByNameOrLastNameContainingIgnoreCase(searchString, pageable);
     }
 
     @PostMapping
